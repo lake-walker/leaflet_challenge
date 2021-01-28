@@ -4,7 +4,7 @@ var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&
 
 // get request to the qury URL
 d3.json(queryUrl, function(data) {
-    createFeatures(data.features);
+    createFeatures(data);
     // console.log(data.features);
 });
 
@@ -13,7 +13,7 @@ function createFeatures(earthquakeData) {
     // define a function we want to run once for each feature in the features array
     // give each feature a popup describing the place and time of the earthquake 
     function onEachFeature(feature, layer) {
-        // console.log(feature.geometry);
+        console.log(feature.geometry.coordinates);
         // layer.bindPopup('<h3>' + feature.properties.place + 
         //     '</h3><hr><p>' + new Date(feature.properties.time) + '</p');
         L.circleMarker([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {
@@ -46,7 +46,7 @@ function createFeatures(earthquakeData) {
 
 // CreateMap function
 function createMap(earthquakes) {
-    console.log(earthquakes);
+    // console.log(earthquakes);
     // Define streetmap and darkmap layers
     var streetmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
         attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
