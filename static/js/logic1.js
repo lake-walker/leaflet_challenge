@@ -66,7 +66,7 @@ function style(feature) {
 d3.json(queryUrl, function(response) {
     // var data = response.features;
     // L.geoJson(data, {style: style}).addTo(myMap);
-    L.geoJSON(response, {
+    geojson = L.geoJSON(response, {
         pointToLayer: function (feature, latlng) {
             return L.circleMarker(latlng, {
                 radius: feature.properties.mag * 10,
@@ -78,6 +78,34 @@ d3.json(queryUrl, function(response) {
             });
         }
     }).addTo(myMap);
+    console.log(geojson);
+
+    // Set up legend
+    var legend = L.control({ position: 'bottomright' });
+    legend.onAdd = function() {
+        var div = L.DomUtil.create('div', 'info legend');
+        var limits = geojson.options.limits;
+        var colors = geojson.options.colors;
+        var labels = [];
+
+        // add min and max
+        var legendInfo = '<h1>Earquake Depth</h1>' + 
+            "<div class=\"labels\">" +
+                "<div class=\"min\">" + limits[0] + "</div>" +
+                "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
+            "</div>";
+        
+        div.innerHTML = legendInfo;
+
+        limits.forEach(function(limit, index) {
+            labels.push('<li style=\'background-color: ' + colors[index] + '\'></li>');
+        });
+
+        div.innerHTML += '<ul>' + lables.join('') + '</ul>';
+        return div;
+    };
+
+    legend.addTo(myMap);
 });
 
 // L.geoJson(data, {style: style}).addTo(myMap);
