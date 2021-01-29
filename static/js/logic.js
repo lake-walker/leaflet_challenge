@@ -21,7 +21,7 @@ function createFeatures(earthquakeData) {
             fillColor:'black',
             radius: 100000
         }).bindPopup('<h3>' + feature.properties.place + 
-        '</h3><hr><p>' + new Date(feature.properties.time) + '</p');
+        '</h3><hr><p>' + new Date(feature.properties.time) + '</p>');
         
     }
 

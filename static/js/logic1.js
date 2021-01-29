@@ -17,68 +17,69 @@ L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
   accessToken: API_KEY
 }).addTo(myMap);
 
-// var mapStyle = {
-//     style: 'circle',
-//     color: 'white',
-//     fillColor: 'pink',
-//     fillOpacity: 0.5,
-//     weight: 1.5
-// };
+var geojson;
+
+d3.json(queryUrl, function(data) {
+    // geojson = L.choropleth(data, {
+    //     valueProperty: 'coordinates',
+    //     scale: ["#ffffb2", "#b10026"],
+    //     steps: 10,
+    //     mode: 'q',
+    //     style: {
+    //         color: '#fff',
+    //         weight: 1,
+    //         fillOpacity: 0.8
+    //     },
+
+    //     onEachFeature: function(feature, layer) {
+            
+    //         layer.bindPopup('<h3>' + feature.properties.place + 
+    //             '</h3><hr><p>' + new Date(feature.properties.time) + '</p>');
+    //     }
+    // }).addTo(myMap);
+})
+
+function getColor(d) {
+    return d > 10 ? '#800026' :
+           d > 6  ? '#BD0026' :
+           d > 5  ? '#E31A1C' :
+           d > 4  ? '#FC4E2A' :
+           d > 3   ? '#FD8D3C' :
+           d > 2   ? '#FEB24C' :
+           d > 1   ? '#FED976' :
+                      '#FFEDA0';
+}
+
+function style(feature) {
+    return {
+        fillColor: getColor(feature.properties.density),
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7
+    };
+}
 
 
-
-// L.geoJSON(someGeojsonFeature, {
-//     pointToLayer: function (feature, latlng) {
-//         return L.circleMarker(latlng, geojsonMarkerOptions);
-//     }
-// }).addTo(map);
 
 d3.json(queryUrl, function(response) {
-    console.log(response.features);
-    // var geojsonMarkerOptions = {
-    //     radius: response.properties.mag,
-    //     fillColor: "#ff7800",
-    //     color: "#000",
-    //     weight: 1,
-    //     opacity: 1,
-    //     fillOpacity: 0.8
-    // };
+    // var data = response.features;
+    // L.geoJson(data, {style: style}).addTo(myMap);
     L.geoJSON(response, {
         pointToLayer: function (feature, latlng) {
             return L.circleMarker(latlng, {
                 radius: feature.properties.mag * 10,
-                fillColor: feature.geometry.coordinates[2],
-                color: "#000",
+                fillColor: getColor(feature.geometry.coordinates[2]),
+                color: ["green", "red"],
                 weight: 1,
                 opacity: 1,
                 fillOpacity: 0.8
             });
         }
     }).addTo(myMap);
-    // var markers = L.markerClusterGroup();
-
-    // response.forEach(item => {
-    //     var location = item.geometry; 
-    //     console.log(location);
-
-    //     if (location) {
-    //         markers.addLayer(L.marker([location.coordinates[1], location.coordinates[0]])
-    //             .bindPopup(item.properties.place));
-    //     }
-    // })
 });
 
+// L.geoJson(data, {style: style}).addTo(myMap);
 
-// d3.json(queryUrl, function(data) {
 
-//     for (var i = 0; i < data.length; i++) {
-//         L.circleMarker([data[i].geometry.coordinates[1], data[i].geometry.coordinates[0]], {
-//             fillOpacity: 0.75,
-//             color: 'white',
-//             fillColor: data[i].geometry.coordinates[2],
-//             radius: data[i].features.properties.mag * 1000
-//         }).bindPopup('<h3>' + feature.properties.place + 
-//             '</h3><hr><p>' + new Date(feature.properties.time) + '</p').addTo(myMap);
-//     }
-//     // createFeatures(data.features);
-// });
