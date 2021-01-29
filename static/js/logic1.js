@@ -75,7 +75,8 @@ d3.json(queryUrl, function(response) {
                 weight: 1,
                 opacity: 1,
                 fillOpacity: 0.8
-            });
+            }).bindPopup('<h3> Location: ' + feature.properties.place + " Magnitude: " + feature.properties.mag + ' Depth: ' + feature.geometry.coordinates[2] +
+            '</h3><hr><p>' + new Date(feature.properties.time) + '</p>');
         }
     }).addTo(myMap);
     console.log(geojson);
@@ -84,10 +85,10 @@ d3.json(queryUrl, function(response) {
     var legend = L.control({ position: 'bottomright' });
     legend.onAdd = function() {
         var div = L.DomUtil.create('div', 'info legend');
-        var limits = geojson.options.limits;
-        var colors = geojson.options.colors;
+        var limits = [0,1,2,3,4,5,6,10];
+        var colors = ['#FFEDA0', '#FED976', '#FEB24C', '#FD8D3C', '#FC4E2A', '#E31A1C', '#BD0026', '#800026'];
         var labels = [];
-
+        
         // add min and max
         var legendInfo = '<h1>Earquake Depth</h1>' + 
             "<div class=\"labels\">" +
@@ -101,7 +102,7 @@ d3.json(queryUrl, function(response) {
             labels.push('<li style=\'background-color: ' + colors[index] + '\'></li>');
         });
 
-        div.innerHTML += '<ul>' + lables.join('') + '</ul>';
+        div.innerHTML += '<ul>'  + labels.join('') + '</ul>';
         return div;
     };
 
